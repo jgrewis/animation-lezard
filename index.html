@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L'Animation de votre site web passe à un autre niveau</title>
+<meta name="description" content="L'Animation de votre site web passe à un autre niveau.">
+<link rel="preload" href="assets/decor.webp" as="image">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Le décor et le personnage sont une seule et même image : celle de la
+       vidéo d'origine. La plaque prolonge ce décor jusqu'aux bords de la
+       fenêtre, le cadre vidéo se pose dessus à sa place exacte. -->
+  <div class="scene" aria-hidden="true">
+    <div class="scene__plaque">
+      <img class="scene__decor" src="assets/decor.webp" width="2480" height="1620" alt="">
+      <div class="scene__cadre">
+        <img class="scene__repli" src="assets/pose-face.webp" width="900" height="720" alt="">
+        <video class="scene__poses" id="poses" src="assets/lezard.mp4"
+               width="900" height="720" muted playsinline preload="auto"></video>
+      </div>
+    </div>
+    <div class="scene__grain"></div>
+  </div>
+
+  <main class="page">
+    <h1 class="titre">
+      L'Animation de votre site web
+      <span class="titre__accent">passe à un autre niveau</span>
+    </h1>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

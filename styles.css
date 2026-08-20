@@ -1,0 +1,241 @@
+/* ==================================================================
+   L'Animation de votre site web passe à un autre niveau
+   ------------------------------------------------------------------
+   Géométrie de la scène (mesurée, voir build/decor.json)
+
+     plaque de fond   2480 × 1620
+     cadre vidéo       900 ×  720, coin haut-gauche à (450, 700)
+
+   Tout est exprimé en multiples de --cadre-l, la largeur affichée du
+   cadre vidéo. Facteurs qui en découlent :
+
+     plaque largeur   2480/900 = 2.755556
+     plaque hauteur   1620/900 = 1.800000
+     décalage gauche   450/900 = 0.500000
+     marge sous cadre  200/900 = 0.222222
+================================================================== */
+
+:root {
+  /* couleurs relevées dans la plaque elle-même */
+  --fond:        #7d3d1a;
+  --encre:       #f6f1ea;
+  --voile:       rgba(44, 17, 5, 0.55);
+
+  /* échelle 8 pt — seuls les pas réellement utilisés sont déclarés */
+  --pas-4:  1rem;
+  --pas-6:  1.5rem;
+  --pas-8:  2rem;
+
+  --gouttiere: clamp(var(--pas-4), 4vw, var(--pas-8));
+
+  /* largeur affichée du cadre vidéo — pilote toute la scène */
+  --cadre-l: max(20rem, min(52vw, 108vh));
+  --cadre-gauche: clamp(0px, 3vw, 3.75rem);
+  --cadre-bas: 0px;
+
+  --fondu-cadre: calc(var(--cadre-l) * 0.018);
+  --fondu-plaque: calc(var(--cadre-l) * 0.09);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background: var(--fond);
+  color: var(--encre);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Scène — plaque de fond, cadre vidéo, grain
+------------------------------------------------------------------ */
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scene__plaque {
+  position: absolute;
+  left: calc(var(--cadre-gauche) - 0.5 * var(--cadre-l));
+  bottom: calc(var(--cadre-bas) - 0.222222 * var(--cadre-l));
+  width: calc(2.755556 * var(--cadre-l));
+  height: calc(1.8 * var(--cadre-l));
+
+  /* la plaque s'éteint sur ses bords vers la couleur de fond : quand elle
+     ne couvre pas toute la fenêtre, aucune arête ne se voit */
+  -webkit-mask-image:
+    linear-gradient(to right, #0000, #000 var(--fondu-plaque),
+                    #000 calc(100% - var(--fondu-plaque)), #0000),
+    linear-gradient(to bottom, #0000, #000 var(--fondu-plaque), #000 100%);
+  mask-image:
+    linear-gradient(to right, #0000, #000 var(--fondu-plaque),
+                    #000 calc(100% - var(--fondu-plaque)), #0000),
+    linear-gradient(to bottom, #0000, #000 var(--fondu-plaque), #000 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+
+  /* réponse verticale : la scène entière bascule, cadre vidéo compris,
+     donc le raccord avec la plaque ne bouge jamais */
+  transform-origin: 35.9% 87.7%;   /* les pieds du personnage */
+  transform: perspective(90rem)
+             translate3d(0, var(--pousse-y, 0px), 0)
+             rotateX(var(--bascule, 0deg));
+  will-change: transform;
+}
+
+.scene__decor {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scene__cadre {
+  position: absolute;
+  left: 18.1452%;    /*  450 / 2480 */
+  top: 43.2099%;     /*  700 / 1620 */
+  width: 36.2903%;   /*  900 / 2480 */
+  height: 44.4444%;  /*  720 / 1620 */
+
+  /* fondu des quatre bords : il absorbe le résidu de grain entre la vidéo
+     et la plaque. 1,8 % de la largeur, soit 16 px à l'échelle d'origine —
+     le personnage commence à 98 px du bord, il n'est jamais estompé */
+  -webkit-mask-image:
+    linear-gradient(to right, #0000, #000 var(--fondu-cadre),
+                    #000 calc(100% - var(--fondu-cadre)), #0000),
+    linear-gradient(to bottom, #0000, #000 var(--fondu-cadre),
+                    #000 calc(100% - var(--fondu-cadre)), #0000);
+  mask-image:
+    linear-gradient(to right, #0000, #000 var(--fondu-cadre),
+                    #000 calc(100% - var(--fondu-cadre)), #0000),
+    linear-gradient(to bottom, #0000, #000 var(--fondu-cadre),
+                    #000 calc(100% - var(--fondu-cadre)), #0000);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.scene__repli,
+.scene__poses {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* La pose de face est peinte tout de suite. La vidéo reste transparente
+   jusqu'à sa première pose : sans cela, elle montrerait d'abord sa propre
+   première image — le profil gauche — avant de sauter à la bonne pose.
+   Et si elle n'arrive jamais, elle ne s'affiche pas du tout. */
+.scene__poses { opacity: 0; }
+.scene--prete .scene__poses { opacity: 1; }
+.scene--repli .scene__poses { display: none; }
+
+.scene__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------
+   Page — la phrase, et rien d'autre
+------------------------------------------------------------------ */
+.page {
+  position: relative;
+  z-index: 1;
+  /* le halo du titre déborde volontairement la boîte du texte : sans cette
+     coupe, il élargit la page et provoque un défilement horizontal sur mobile */
+  overflow: clip;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--gouttiere);
+  padding: var(--gouttiere);
+  pointer-events: none;
+}
+
+.titre {
+  position: relative;
+  isolation: isolate;
+  grid-column: 2;
+  margin: 0;
+  max-width: 15ch;
+  font-size: clamp(2rem, 4.3vw, 4.5rem);
+  font-weight: 300;
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  text-shadow: 0 1px 1.5rem rgba(48, 19, 6, 0.42);
+}
+
+/* Halo très étalé sous la phrase. Le fond de studio est clair près de
+   l'horizon : sans lui, le contraste tombe à 3,2:1 à l'endroit le plus clair
+   traversé par le texte. Avec, il remonte à 4,9:1 — mesuré, pas estimé.
+   Étalé sur près de trois fois la boîte du titre, il ne se lit pas comme une
+   forme, seulement comme une ombre du décor. */
+.titre::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -120% -80%;
+  background: radial-gradient(closest-side, var(--voile) 0 20%, transparent 100%);
+}
+
+/* accent par la graisse : sur un fond orange, un accent ambré ne se lit plus */
+.titre__accent {
+  display: block;
+  margin-top: 0.1em;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .titre { animation: monter 1s cubic-bezier(0.2, 0.8, 0.25, 1) both; }
+
+  @keyframes monter {
+    from { opacity: 0; transform: translate3d(0, 1.5rem, 0); }
+    to   { opacity: 1; }
+  }
+}
+
+/* ------------------------------------------------------------------
+   Écrans étroits ou en portrait — la phrase passe au-dessus du lézard
+------------------------------------------------------------------ */
+@media (max-width: 62rem), (max-aspect-ratio: 1 / 1) {
+  :root {
+    /* le cadre déborde la fenêtre : c'est le personnage, pas le cadre, qui
+       doit remplir l'écran — il n'occupe que 76 % de la largeur du cadre */
+    --cadre-l: max(12rem, min(124vw, 62vh));
+    /* centré sur la tête (60,3 % du cadre), pas sur le cadre */
+    --cadre-gauche: calc(50vw - 0.55 * var(--cadre-l));
+  }
+
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    padding-top: clamp(var(--pas-6), 6vh, var(--pas-8));
+  }
+
+  .titre {
+    grid-column: 1;
+    max-width: 18ch;
+    justify-self: center;
+    text-align: center;
+    /* la hauteur borne aussi le corps du texte : sur un écran bas — ou à
+       200 % de zoom — la phrase ne doit pas venir buter sur le lézard */
+    font-size: clamp(1.15rem, min(7.4vw, 5.4vh), 3rem);
+  }
+}
+
+/* écran très bas en paysage : le personnage ne doit pas manger la phrase */
+@media (min-width: 62rem) and (max-height: 35rem) {
+  :root { --cadre-l: min(42vw, 128vh); }
+}

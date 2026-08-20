@@ -1,0 +1,4 @@
+.DS_Store
+
+# images de travail regenerees par ffmpeg (voir README, « Refaire la chaine »)
+build/poses/
