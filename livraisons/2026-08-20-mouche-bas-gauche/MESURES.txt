@@ -1,0 +1,26 @@
+================================================================
+RECETTE DE LA MATIERE — 240 images
+================================================================
+NON  derive du fond          36.39 /255   (seuil 3)
+     amplitude horizontale     267 px      (course de l'oeil suivi)
+     amplitude verticale        48 px
+NON  regularite du balayage  pas median 0.0 px, p90 7.2, max 19.2  (rapport 0.0)
+OK   pupille visible         0 image(s) sans pupille
+OK   nettete de la pupille   mediane 0.86, minimum 0.65
+       les 10 images les plus faibles : 201 (0.72), 202 (0.74), 203 (0.71), 204 (0.71), 205 (0.73), 229 (0.72), 230 (0.71), 231 (0.65), 232 (0.67), 233 (0.71)
+       -> les regarder une fois, puis fixer NETTETE_MIN en tete de fichier
+OK   reflet sur le verre     0 image(s) ou plus de 10 % de la boite sature
+
+COUVERTURE DU PLAN (direction du regard)
+  colonnes = gauche -> droite, lignes = haut -> bas, chiffre = nb de poses
+    44   1   1   .   .   .   .   .   .   .   .   .
+     7   3   .   1   .   .   .   .   .   .   .   2
+     .   .   1   .   1   .   .   .   .   7   .  18
+     .   .   1   2   .   1   .   .   .  10   1   6
+     .   .   .   .   2   3   2   2   .   .   8   1
+     .   .   .   .   .  46   .   3  12   .   4   1
+     .   .   .   .   .   .   .   .  28   9  12   .
+  53 cases vides sur 84 (63 %)
+
+qualite du suivi : score median 0.86 (1 = calage parfait)
+relevé image par image : build/releve.json

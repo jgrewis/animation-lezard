@@ -1,0 +1,9 @@
+width=1280
+height=720
+pix_fmt=yuv420p
+color_range=unknown
+color_space=unknown
+color_transfer=unknown
+color_primaries=unknown
+r_frame_rate=24/1
+nb_frames=240
