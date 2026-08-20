@@ -85,6 +85,17 @@ Un insecte qui vole lentement devant lui. Les générateurs rendent un
 le résultat est naturel par construction : la tête accompagne, les yeux
 devancent, exactement ce qu'on cherche.
 
+> ### /!\ L'insecte doit rester invisible
+>
+> Essayé le 20 août 2026 : formulée telle quelle, la consigne a produit une
+> prise où **le générateur a dessiné la mouche, et tracé sa trajectoire en
+> blanc en travers du décor**. Inexploitable : le tracé passe derrière le
+> personnage, donc dans toutes les poses.
+>
+> Formuler le jeu, jamais l'accessoire : « le lézard suit du regard un point
+> invisible qui se déplace devant lui ». Et l'écrire noir sur blanc : aucun
+> objet, aucun trait, aucune trajectoire, aucune marque à l'image.
+
 **Trajet demandé pour l'insecte** — un balayage en lignes, du haut vers le bas :
 
 ```
@@ -118,18 +129,34 @@ branches, deux directions voisines sont très loin l'une de l'autre, et le regar
 lignes. « Regarder en haut à droite », c'est la ligne du haut, au bout à droite.
 Toute combinaison hauteur × latéral existe déjà.
 
-### Les segments, dans un seul fichier, sans couper la caméra
+### Plusieurs clips courts, pas une longue prise
+
+Mesuré le 20 août 2026 sur une prise de 10 s : **le générateur tient environ
+8 secondes, puis il dérive.** À l'image 204 sur 240, le fond de studio avait
+laissé place à une pièce meublée — plancher, étagères, plantes — et la caméra
+avait avancé au point de faire grossir le personnage de 36 %.
+
+D'où la règle : **6 à 7 secondes par clip**, et autant de clips que nécessaire.
+C'est aussi la limite de l'offre gratuite, qui plafonne à 8 secondes.
+
+La cohérence entre clips ne se perd pas pour autant, à une condition : **partir
+à chaque fois de la même première image** (`reference/pose-de-face.png`, ou une
+image validée d'un clip précédent). C'est elle qui verrouille le cadrage, la
+lumière et l'identité du personnage.
+
+### Les segments, un clip chacun
 
 | # | Segment | Durée | Contenu |
 |---|---|---|---|
-| 1 | **Le balayage du plan** | 12 – 18 s | l'insecte parcourt les 5 à 7 lignes ci-dessus ; le lézard le suit des yeux et de la tête. Aucun clignement. |
+| 1 | **Le balayage du plan** | 6 – 7 s par clip | le point invisible parcourt une ou deux des lignes ci-dessus ; le lézard le suit des yeux et de la tête. Aucun clignement. **Autant de clips que de lignes.** |
 | 2 | **Repos** | 3 s | le lézard revient de lui-même face caméra, regard droit devant, vers l'objectif |
 | 3 | **Clignements** | 3 s | face caméra, deux ou trois clignements naturels, bien séparés |
 | 4 | **Attente** | 3 s | face caméra : un coup de langue sur le museau, un léger mouvement d'attente |
 | 5 | **Décor vide** | 2 s | le personnage sort du champ, caméra et lumière inchangées |
 
-Une seule prise = une seule lumière, un seul fond, une seule identité. C'est ce
-qui permet de composer les segments entre eux.
+Chaque clip part de la même première image : c'est ce qui permet de composer
+les segments entre eux, et de cumuler leurs images dans une même banque de
+poses.
 
 Les segments 2 à 4 servent **uniquement au repos** (voir §6) : c'est le seul
 moment où le lézard regarde l'utilisateur.
@@ -171,6 +198,12 @@ C'est la limite qu'a franchie la prise actuelle à partir de la pose 100 : l'œi
 roule si haut que la pupille sort du champ. Le regard peut aller haut, il ne
 doit pas disparaître. Si le personnage doit lever les yeux au-delà, **c'est la
 tête qui prend le relais**.
+
+**3 bis. Rien ne s'ajoute à l'image.**
+Pas d'insecte visible, pas de trajectoire tracée, pas de meuble, pas de sol, pas
+d'accessoire, pas de changement de décor en cours de prise. Le fond reste le
+même mur de studio du début à la fin. C'est le défaut qui a coûté la prise du
+20 août.
 
 **4. Caméra fixe, lumière fixe, fond fixe.**
 Aucun zoom, aucun travelling, aucun recadrage, aucune variation d'éclairage.
