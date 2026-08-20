@@ -128,9 +128,10 @@ il faut la recopier dans le tableau `LUT`.
 
 ## Refaire la matière source
 
-Le suivi bute aujourd'hui sur la vidéo elle-même : **43 des 125 poses seulement
-ont un regard lisible**, et le balayage ne contient aucun mouvement vertical des
-yeux. Le cahier des charges de la nouvelle prise — ce qu'il faut tourner, les
+Le suivi bute aujourd'hui sur la vidéo elle-même : la prise parcourt **une seule
+diagonale** dans le plan (direction de la tête × hauteur du regard). Tête à
+droite y va toujours avec œil en haut, si bien que le curseur ne pilote qu'un
+seul paramètre. Le cahier des charges de la nouvelle prise — ce qu'il faut tourner, les
 contraintes, et la recette à faire à la livraison — est dans
 [`SPEC-nouvelle-source.md`](SPEC-nouvelle-source.md), avec les planches contact
 qui servent de preuve dans [`preuves/`](preuves).

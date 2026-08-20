@@ -4,188 +4,243 @@
 pourquoi**, avec les mesures qui le justifient et la recette à faire à la
 livraison.
 
+Objectif : un personnage **vivant qui suit le curseur du regard**, sur les deux
+axes, y compris en biais. Pas un personnage qui fixe l'utilisateur.
+
 ---
 
-## 1. Pourquoi refaire la matière
+## 1. Le vrai défaut de la prise actuelle
 
-La vidéo actuelle donne 125 poses. **43 seulement sont utilisables.** Le reste
-n'a pas de regard lisible. Relevé image par image sur les 125 :
+Ce n'est pas que les yeux bougent mal. **C'est qu'ils bougent en même temps que
+la tête, et seulement comme elle.**
 
-| Poses | État de l'œil | Part |
+Relevé image par image sur les 125 poses, en suivant l'œil proche :
+
+| Poses | Direction de la tête | Hauteur du regard |
 |---|---|---|
-| 0 – 5 | fermé ou dans l'ombre | 5 % |
-| 6 – 13 | en train de s'ouvrir | 6 % |
-| **14 – 56** | **ouvert, iris et pupille lisibles** | **34 %** |
-| 57 – 74 | la pupille remonte, l'œil se voile | 14 % |
-| 75 – 124 | dôme crème derrière le verre : ni iris ni pupille | 40 % |
+| 0 – 13 | profil gauche | œil fermé ou dans l'ombre |
+| 14 – 56 | gauche → face | pupille centrée |
+| 57 – 74 | face → droite | la pupille monte |
+| 75 – 95 | droite | regard franchement en haut, sclère blanche dessous |
+| 96 – 124 | profil droit | pupille sortie du champ visible |
 
-Les planches contact qui servent de preuve sont dans [`preuves/`](preuves) :
-les 125 poses en bande des yeux, et deux agrandissements sur les zones de
-bascule (poses 45 à 74, puis 75 à 104).
+Autrement dit : **tête à droite ⇒ œil en haut, toujours.** Les deux mouvements
+sont soudés. La prise parcourt une seule **diagonale** dans le plan
+(direction de la tête × hauteur du regard).
 
-Vérifié en agrandissement : sur la fin du balayage ce **n'est pas un reflet sur
-la lunette** — le dôme pâle est derrière le verre, la monture et son reflet
-propre sont visibles par-dessus. C'est la paupière, ou le globe retourné.
+Conséquence exacte dans la page livrée : le curseur ne pilote qu'un seul
+paramètre, donc le regard monte quand l'utilisateur va à droite, même si son
+curseur est en bas. Le mouvement n'est pas faux en soi — il est **mal indexé**.
 
-Conséquence directe dans la page livrée : **toute la moitié droite de l'écran
-envoie le lézard dans des poses où il ne regarde plus personne.** Et le
-clignement du bord gauche apparaît en plein mouvement, ce qui n'a aucun sens.
+> Une pose où l'œil regarde en haut est de la **bonne matière**. Elle doit
+> simplement sortir quand le curseur est en haut.
 
-### Le défaut se propage dans notre table
+### Ce qui manque, donc
 
-La table curseur → pose est calculée sur « ce qui bouge » d'une image à l'autre,
-dans une zone qui **contenait les yeux**. Résultat mesuré :
+Pas « du mouvement vertical » : **le reste du plan**. Il faut plusieurs
+diagonales, ou mieux, un balayage complet des deux axes.
 
-- **81 % du mouvement mesuré vient de la seule zone des yeux**, pas de la
-  rotation de la tête ;
-- les images de clignement pèsent jusqu'à **3,8 fois** la médiane ;
-- la table leur alloue donc jusqu'à **3,7 % de la largeur de l'écran chacune**,
-  contre 0,8 % pour une pose moyenne — soit **4,6 fois trop**.
+### Notre part
 
-Autrement dit, non seulement le clignement est là, mais on s'attarde dessus.
-C'est une erreur de méthode de notre côté, corrigée dès que la matière sera
-saine (zone de mesure restreinte au crâne et au museau, yeux exclus).
+La table curseur → pose indexe les poses par leur **position dans le balayage**.
+Il faut les indexer par **la direction qu'elles regardent**. Mesure qui le
+montre : dans la zone qui sert à construire la table, **81 % du mouvement
+mesuré venait des yeux** et non de la rotation de la tête — on croyait mesurer
+une tête qui tourne, on mesurait un œil qui roule. Corrigé dès que la matière
+sera saine.
 
 ---
 
 ## 2. Vidéo ou images ?
 
-**Vidéo, en une seule prise continue.** Les images seules ne conviennent pas.
+**Vidéo, en une seule prise continue.** Les images ne conviennent pas.
 
-La raison est simple : ce dont le site a besoin, ce n'est pas d'une animation,
-c'est d'une **collection de poses parfaitement cohérentes entre elles**. La page
-ne lit jamais la vidéo — elle s'y déplace pose par pose. Une vidéo n'est ici
-qu'un conteneur d'images, mais un conteneur qui garantit gratuitement ce qui est
-le plus difficile à obtenir autrement : **d'une image à la suivante, seul bouge
-ce qui doit bouger**.
+Ce dont le site a besoin n'est pas une animation mais une **collection de poses
+parfaitement cohérentes entre elles** — la page ne lit jamais la vidéo, elle s'y
+déplace, pose par pose. La vidéo garantit gratuitement ce qui est le plus dur à
+obtenir autrement : d'une image à la suivante, seul bouge ce qui doit bouger.
 
-Mesure à l'appui sur la prise actuelle : le fond ne dérive que de **2,4/255**
-entre la première et la dernière des 125 images. C'est cette stabilité qui
-permet de reconstruire une plaque de fond unique et de ne rien voir du raccord.
-Une série d'images générées une par une dérive au contraire à chaque rendu —
-texture de peau, forme des lunettes, lumière — et chaque pas du suivi se met à
-scintiller.
+Mesure sur la prise actuelle : le fond ne dérive que de **2,4/255** sur les 125
+images. C'est cette stabilité qui rend le raccord du décor invisible. Une série
+d'images générées une par une dérive à chaque rendu — peau, lunettes, lumière —
+et chaque pas du suivi se met à scintiller.
 
-Les images gardent un usage : **réparer une pose isolée** (repeindre un œil sur
-une image précise). Comme outil de retouche, pas comme source.
+Les images gardent un usage : **réparer une pose isolée**. Comme outil de
+retouche, pas comme source.
 
-### Une seule prise, cinq segments, dans cet ordre
+---
 
-Tout dans **un seul fichier**, sans couper la caméra ni retoucher la lumière
-entre les segments. C'est ce qui garantit que les cinq segments se composent
-entre eux.
+## 3. Ce qu'il faut tourner
 
-| # | Segment | Durée | Ce qui doit s'y passer |
+### Principe : couvrir le plan, pas une ligne
+
+Le personnage doit regarder successivement **partout dans le champ** : haut
+gauche, haut, haut droite, milieu gauche, milieu, milieu droite, bas gauche,
+bas, bas droite — et tous les intermédiaires. Tête et yeux ensemble, comme
+naturellement.
+
+**La manière la plus sûre de l'obtenir : lui donner quelque chose à suivre.**
+Un insecte qui vole lentement devant lui. Les générateurs rendent un
+« il suit des yeux la mouche qui vole » bien mieux qu'une consigne d'angle. Et
+le résultat est naturel par construction : la tête accompagne, les yeux
+devancent, exactement ce qu'on cherche.
+
+**Trajet demandé pour l'insecte** — un balayage en lignes, du haut vers le bas :
+
+```
+   ligne 1  ←──────────────────────────  (en haut)
+   ligne 2  ──────────────────────────→
+   ligne 3  ←──────────────────────────  (à hauteur des yeux)
+   ligne 4  ──────────────────────────→
+   ligne 5  ←──────────────────────────  (en bas)
+```
+
+Cinq lignes suffisent, sept sont confortables. Chaque ligne doit couvrir toute
+l'amplitude horizontale, du profil gauche au profil droit, **à vitesse
+constante**, sans pause et sans retour en arrière au milieu.
+
+### Les segments, dans un seul fichier, sans couper la caméra
+
+| # | Segment | Durée | Contenu |
 |---|---|---|---|
-| 1 | **Regard vertical** | 3 s | Tête immobile, face caméra. Les yeux seuls montent au plafond puis descendent au sol, lentement, sans à-coup. |
-| 2 | **Regard horizontal** | 3 s | Tête immobile, face caméra. Les yeux seuls balaient de gauche à droite. |
-| 3 | **Clignements** | 3 s | Tête immobile, face caméra. Deux ou trois clignements naturels, bien séparés. |
-| 4 | **Balayage de la tête** | 10 s | La tête tourne du profil gauche au profil droit, **à vitesse constante**, sans pause, sans retour. **Les yeux restent grands ouverts et fixent l'objectif pendant tout le mouvement.** Aucun clignement. |
-| 5 | **Décor vide** | 2 s | Le personnage sort du champ. Caméra et lumière inchangées. |
+| 1 | **Le balayage du plan** | 12 – 18 s | l'insecte parcourt les 5 à 7 lignes ci-dessus ; le lézard le suit des yeux et de la tête. Aucun clignement. |
+| 2 | **Repos** | 3 s | le lézard revient de lui-même face caméra, regard droit devant, vers l'objectif |
+| 3 | **Clignements** | 3 s | face caméra, deux ou trois clignements naturels, bien séparés |
+| 4 | **Attente** | 3 s | face caméra : un coup de langue sur le museau, un léger mouvement d'attente |
+| 5 | **Décor vide** | 2 s | le personnage sort du champ, caméra et lumière inchangées |
 
-Le segment 5 vaut de l'or : il nous donne la **vraie plaque de fond**, au lieu de
-celle qu'on a dû reconstruire en effaçant le personnage — c'est de cette
-reconstruction que venaient les taches qu'il a fallu noyer dans un flou.
+Une seule prise = une seule lumière, un seul fond, une seule identité. C'est ce
+qui permet de composer les segments entre eux.
 
-Le segment 4 seul suffirait à refaire le site tel quel. Ce sont les segments 1
-à 3 qui débloquent ce qui manque aujourd'hui : le suivi vertical par les yeux et
-le clignement au repos.
+Les segments 2 à 4 servent **uniquement au repos** (voir §6) : c'est le seul
+moment où le lézard regarde l'utilisateur.
+
+Le segment 5 vaut de l'or : il donne la **vraie plaque de fond**, au lieu de
+celle qu'il a fallu reconstruire en effaçant le personnage — c'est de cette
+reconstruction que venaient les taches qu'on a dû noyer dans un flou.
+
+### Combien d'images
+
+| | Amplitude | Pas visé | Échantillons |
+|---|---|---|---|
+| Horizontal | profil à profil, ~130° | 2 à 3° | 45 à 65 par ligne |
+| Vertical | ~50° utiles | 8 à 10° | 5 à 7 lignes |
+
+Soit **250 à 450 poses**, c'est-à-dire 10 à 18 s à 25 i/s. Poids estimé du
+média final : 3,5 à 7 Mo, contre 2 Mo aujourd'hui.
+
+Optimisation possible si le poids gêne : **densifier la ligne médiane** (celle à
+hauteur des yeux, de loin la plus utilisée) et espacer les lignes hautes et
+basses. Le regard en biais extrême demande moins de finesse que le regard droit.
 
 ---
 
-## 3. Contraintes non négociables
+## 4. Contraintes non négociables
 
-Dans l'ordre d'importance. Les trois premières décident du succès.
+Dans l'ordre d'importance.
 
-**1. Les yeux fixent l'objectif pendant tout le segment 4.**
-C'est la contrainte qui a été manquée la dernière fois, et elle coûte 66 % de la
-matière. À formuler explicitement à la génération, et à **vérifier image par
-image** à la livraison, pas au visionnage.
+**1. Aucun clignement hors du segment 3.**
+Le clignement est une matière à part, qu'on déclenche nous-mêmes après une
+seconde d'immobilité — jamais pendant un mouvement.
 
-**2. Aucun clignement dans les segments 1, 2, 4 et 5.**
-Le clignement est une matière à part (segment 3), qu'on jouera nous-mêmes,
-uniquement après une seconde d'immobilité du curseur — jamais pendant un
-mouvement.
+**2. Chaque ligne du balayage couvre toute l'amplitude horizontale.**
+Une ligne qui s'arrête à mi-course laisse un trou dans le plan : il y aura une
+zone de l'écran sans pose correspondante.
 
-**3. Caméra fixe, lumière fixe, fond fixe.**
-Aucun zoom, aucun travelling, aucun recadrage, aucune variation d'éclairage
-entre le début et la fin. Le personnage ne doit pas se déplacer dans le cadre :
-seule sa tête tourne. Tolérance : **2 px de translation** sur toute la prise.
+**3. La pupille reste visible sur tout le balayage.**
+C'est la limite qu'a franchie la prise actuelle à partir de la pose 100 : l'œil
+roule si haut que la pupille sort du champ. Le regard peut aller haut, il ne
+doit pas disparaître. Si le personnage doit lever les yeux au-delà, **c'est la
+tête qui prend le relais**.
 
-**4. Vitesse constante sur le balayage.**
+**4. Caméra fixe, lumière fixe, fond fixe.**
+Aucun zoom, aucun travelling, aucun recadrage, aucune variation d'éclairage.
+Le personnage ne se déplace pas dans le cadre : seules la tête et les yeux
+bougent. Tolérance : **2 px de translation** sur toute la prise.
+
+**5. Vitesse constante.**
 Sur la prise actuelle, 37 % du mouvement tient dans les 20 premières poses et
-2 % dans les 20 suivantes. Il a fallu compenser par calcul. Un balayage à
-vitesse régulière rend la correspondance curseur → pose exacte par construction.
+2 % dans les 20 suivantes ; il a fallu compenser par calcul. Une vitesse
+régulière rend la correspondance curseur → pose exacte par construction.
 
-**5. Rien d'autre ne bouge.**
+**6. Rien d'autre ne bouge.**
 Pas de respiration marquée, pas de balancement du corps, pas de mouvement de
-queue ni de main pendant le balayage. Tout ce qui bouge en plus de la tête
-devient un tremblement quand on saute d'une pose à l'autre.
+queue ni de main pendant le balayage. Tout ce qui bouge en plus devient un
+tremblement quand on saute d'une pose à l'autre.
 
-**6. Pas de reflet saturé sur les verres.**
-Les lunettes sont un risque : un reflet spéculaire qui balaie le verre pendant
-la rotation masque l'œil. Si l'éclairage ne peut pas l'éviter, il vaut mieux
-**une version sans lunettes**, ou des verres traités antireflet.
+**7. Pas de reflet saturé sur les verres.**
+Un reflet spéculaire qui balaie le verre pendant la rotation masque l'œil. Si
+l'éclairage ne peut pas l'éviter : verres antireflet, ou version sans lunettes.
 
-**7. La tête doit être grande dans le cadre.**
-Aujourd'hui l'œil fait environ 45 px de large. Pour composer un regard net, il
-en faut **au moins 60, idéalement 90**. Soit en cadrant plus serré, soit en
-livrant en 1920 × 1080 au lieu de 1280 × 720.
+**8. La tête doit être grande dans le cadre.**
+Aujourd'hui l'œil fait environ 45 px de large. Pour lire une direction de regard
+au degré près, il en faut **60 au minimum, 90 idéalement** : cadrage plus serré,
+ou livraison en 1920 × 1080 au lieu de 1280 × 720.
 
 ---
 
-## 4. Livraison
+## 5. Livraison
 
-- **Une suite d'images PNG**, ou un master sans perte (ProRes, FFV1). À défaut,
-  H.264 en **CRF 16 ou mieux**, sans redimensionnement.
-- **24 ou 25 images par seconde**, constant, sans images dupliquées.
+- **Suite d'images PNG**, ou master sans perte (ProRes, FFV1). À défaut, H.264
+  en **CRF 16 ou mieux**, sans redimensionnement.
+- **24 ou 25 images par seconde**, constant, sans image dupliquée.
 - Aucun montage, aucun fondu, aucune correction colorimétrique après coup.
-- Si le fichier est encodé : **les balises de couleur doivent être présentes**
-  (primaires, courbe, matrice, plage). Sans elles, chaque logiciel décode à sa
-  façon — c'est ce qui a fait apparaître le cadre vidéo comme un rectangle plus
-  clair sur le fond, et il a fallu le diagnostiquer au pixel. À défaut on
-  réétiquette nous-mêmes, mais autant l'éviter.
+- Si le fichier est encodé : **balises de couleur présentes** (primaires,
+  courbe, matrice, plage). Sans elles, chaque logiciel décode à sa façon — c'est
+  ce qui a fait apparaître le cadre vidéo comme un rectangle plus clair sur le
+  fond, et il a fallu le diagnostiquer au pixel.
 
 ---
 
-## 5. Recette à la livraison
+## 6. Le comportement au repos, à produire aussi
+
+Séquence voulue, à jouer avec les segments 2 à 4 :
+
+1. **1 seconde sans mouvement du curseur.**
+2. Le lézard **revient en position neutre** et regarde droit devant lui, vers
+   l'utilisateur. C'est le seul moment où il le fixe.
+3. Il **cligne des yeux**, et de temps en temps passe la langue sur son museau,
+   en signe d'attente.
+4. **Dès que le curseur rebouge, il le suit immédiatement** — aucun retard,
+   aucun amorti à la reprise.
+
+C'est cette séquence qui fait la différence entre une animation et une présence.
+
+---
+
+## 7. Recette à la livraison
 
 À faire **avant** de rien intégrer. Chaque point est mesurable.
 
 | Contrôle | Méthode | Seuil |
 |---|---|---|
-| Pupille visible sur 100 % des images du segment 4 | planche contact de la bande des yeux, image par image | aucune exception |
+| Pupille visible sur 100 % du segment 1 | planche contact de la bande des yeux, image par image | aucune exception |
 | Aucun clignement hors segment 3 | même planche | aucune exception |
-| Dérive du fond | écart moyen entre la première et la dernière image, hors personnage | ≤ 3/255 |
+| Couverture du plan | position de la pupille dans l'œil, relevée sur chaque image, portée sur un nuage de points | aucun trou de plus de 5 % de la surface |
+| Chaque ligne va d'un profil à l'autre | direction de la tête, début et fin de ligne | amplitude complète |
+| Dérive du fond | écart moyen première/dernière image, hors personnage | ≤ 3/255 |
 | Translation du personnage | position du museau, première et dernière image | ≤ 2 px |
-| Rotation monotone | écart entre les deux yeux, image par image | strictement croissant puis décroissant, sans retour |
-| Régularité du balayage | même mesure, écart entre pas consécutifs | ≤ 2× la médiane |
+| Régularité du balayage | écart entre pas consécutifs | ≤ 2× la médiane |
 | Reflet sur les verres | luminance maximale dans la zone du verre | < 240/255 |
 
-La planche contact de la bande des yeux est l'outil décisif : 125 vignettes sur
-une seule image, et le défaut saute aux yeux en trois secondes. C'est elle qui a
-révélé le problème actuel — elle aurait dû être faite **avant** de construire
-quoi que ce soit.
+La **planche contact de la bande des yeux** est l'outil décisif : toutes les
+poses en vignettes sur une seule image, et le défaut saute aux yeux en trois
+secondes. C'est elle qui a révélé le problème actuel — elle aurait dû être faite
+**avant** de construire quoi que ce soit. Exemples dans [`preuves/`](preuves).
 
 ---
 
-## 6. Ce que la nouvelle matière permettra
+## 8. Ce qui change côté code, une fois la matière livrée
 
-- **Suivi vertical réel par les yeux** : la pupille suit la hauteur du curseur,
-  au lieu de l'inclinaison du corps qui la remplace aujourd'hui.
-- **Suivi à deux axes** : direction de la tête donnée par X, direction du regard
-  donnée par X et Y — c'est ce qui produit l'impression qu'il vous regarde
-  vraiment, et non qu'il tourne la tête.
-- **Clignement maîtrisé** : jamais en mouvement, uniquement après une seconde
-  d'immobilité, avec une reprise naturelle.
-- **Micro-saccades au repos** : l'œil réel ne glisse pas, il saute. C'est ce
-  détail qui fait la différence entre « ça suit » et « il me regarde ».
-- **Mouvement continu** : le décodeur tient **219 poses par seconde** (4,2 ms par
-  déplacement, mesuré en ligne). Il reste donc largement de quoi fondre deux
-  poses voisines l'une dans l'autre et supprimer le dernier escalier perceptible.
-  Le banc d'essai initial annonçait 58,5 : la marge est trois fois plus grande
-  qu'on ne le croyait.
-
-Côté code, trois corrections déjà identifiées : zone de mesure de la table
-**hors des yeux**, ressort amorti au lieu du lissage exponentiel actuel, et
-composition du regard en surcouche du cadre vidéo.
+- **Les poses sont indexées par la direction qu'elles regardent**, plus par leur
+  rang dans le balayage. Pour chaque image on relève la direction de la tête et
+  la position de la pupille dans l'œil ; la somme des deux donne la direction du
+  regard. La page cherche ensuite la pose dont la direction pointe le plus près
+  du curseur — sur les deux axes, croisements compris.
+- **Fondu entre les deux poses voisines** au lieu d'un saut : le décodeur tient
+  **219 poses par seconde** (4,2 ms par déplacement, mesuré en ligne), il reste
+  donc toute la marge nécessaire pour afficher deux poses mélangées.
+- **Ressort amorti** à la place du lissage exponentiel actuel, et **reprise
+  instantanée** à la sortie du repos.
+- **Zone de mesure hors des yeux** pour tout ce qui concerne la tête.
+- **Micro-saccades** au repos : l'œil réel ne glisse pas, il saute.
