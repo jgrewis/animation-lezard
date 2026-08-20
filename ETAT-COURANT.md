@@ -129,6 +129,22 @@ Si un saut se voit au balayage, le réglage est `SOUPLESSE_TETE` dans `script.js
 
 ---
 
+## Mise en ligne
+
+Publié sur **GitHub Pages** le 20 août 2026 :
+
+- dépôt : https://github.com/jgrewis/animation-lezard (public, branche `main`)
+- site : **https://jgrewis.github.io/animation-lezard/**
+
+Vérifié en ligne, pas seulement en local : la vidéo est déplaçable
+(`seekable` = [0, 5]), la page passe bien en `scene--prete`, aucune ressource en
+erreur. GitHub Pages répond en `206 Partial Content` avec `accept-ranges: bytes`
+— c'est ce qui manquait au serveur de développement et qui figeait tout.
+
+Toute mise à jour se fait par un `git push` sur `main`.
+
+---
+
 ## Reste à faire
 
 - [ ] Recette humaine en mouvement (ci-dessus)

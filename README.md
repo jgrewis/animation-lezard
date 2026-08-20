@@ -1,5 +1,7 @@
 # Lézard qui suit le curseur
 
+**En ligne : https://jgrewis.github.io/animation-lezard/**
+
 Page d'arrivée : une seule phrase, et le lézard de la vidéo source qui tourne la
 tête vers le curseur. Le décor autour de lui **est celui de la vidéo** — aucun
 détourage, donc aucune découpe à voir.
@@ -19,6 +21,24 @@ puis `http://localhost:4173`.
 
 Par double-clic sur `index.html`, la page fonctionne aussi : le script est un
 script classique, pas un module ES, précisément pour cela.
+
+## Mise en ligne
+
+Le site est publié par **GitHub Pages**, branche `main`, racine du dépôt. Il n'y
+a rien à construire : pousser sur `main` suffit, la mise à jour prend une minute.
+
+```bash
+git add -A && git commit -m "…" && git push
+```
+
+Point vérifié avant tout le reste : **GitHub Pages répond bien en
+`206 Partial Content`** sur `assets/lezard.mp4`, avec `accept-ranges: bytes`.
+C'est la condition du suivi — sans elle, la vidéo n'est pas déplaçable et le
+lézard reste figé sur la pose de face (voir plus bas). Contrôle en une ligne :
+
+```bash
+curl -s -D - -o /dev/null -r 100-200 https://jgrewis.github.io/animation-lezard/assets/lezard.mp4 | head -3
+```
 
 ## Comment ça marche
 
