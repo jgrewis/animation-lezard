@@ -2,3 +2,6 @@
 
 # images de travail regenerees par ffmpeg (voir README, « Refaire la chaine »)
 build/poses/
+build/images/
+build/calibration-*.png
+build/releve.json
