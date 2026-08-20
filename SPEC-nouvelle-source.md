@@ -99,6 +99,25 @@ Cinq lignes suffisent, sept sont confortables. Chaque ligne doit couvrir toute
 l'amplitude horizontale, du profil gauche au profil droit, **à vitesse
 constante**, sans pause et sans retour en arrière au milieu.
 
+### Pourquoi des lignes, et pas une étoile
+
+La tentation est de tourner les huit directions — haut, bas, gauche, droite et
+les quatre diagonales, façon rose des vents. C'est plus intuitif, mais ça couvre
+moins bien, à quantité d'images égale :
+
+| | Pas entre deux directions voisines | Erreur maximale |
+|---|---|---|
+| Étoile à 8 branches | 45° | **22°** |
+| 7 lignes horizontales | 8 à 10° en hauteur, 2 à 3° en largeur | **5°** |
+
+Une étoile est dense près du centre et s'écarte en s'éloignant : au bout des
+branches, deux directions voisines sont très loin l'une de l'autre, et le regard
+« accroche » par paliers. Des lignes échantillonnent le plan de façon uniforme.
+
+**Et les diagonales n'ont pas à être tournées séparément** : elles sont dans les
+lignes. « Regarder en haut à droite », c'est la ligne du haut, au bout à droite.
+Toute combinaison hauteur × latéral existe déjà.
+
 ### Les segments, dans un seul fichier, sans couper la caméra
 
 | # | Segment | Durée | Contenu |
