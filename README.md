@@ -125,3 +125,12 @@ sh build/etiqueter.sh          # balises de couleur de la vidéo
 
 La table de `script.js` est une copie de `build/poses.json` : après `arc2.py`,
 il faut la recopier dans le tableau `LUT`.
+
+## Refaire la matière source
+
+Le suivi bute aujourd'hui sur la vidéo elle-même : **43 des 125 poses seulement
+ont un regard lisible**, et le balayage ne contient aucun mouvement vertical des
+yeux. Le cahier des charges de la nouvelle prise — ce qu'il faut tourner, les
+contraintes, et la recette à faire à la livraison — est dans
+[`SPEC-nouvelle-source.md`](SPEC-nouvelle-source.md), avec les planches contact
+qui servent de preuve dans [`preuves/`](preuves).
