@@ -5,3 +5,5 @@ build/poses/
 build/images/
 build/calibration-*.png
 build/releve.json
+livraisons/*/images/
+livraisons/*/source.*
